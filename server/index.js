@@ -63,12 +63,12 @@ app.get('/new/:id', (req,res)=>{
     })
 })
 app.put('/update/:id',async (req,res)=>{
-    const id = req.params.id
-    
-    dataModel.findByIdAndUpdate({_id:id},async (err,result)=>{
-        
-        result.clientAgency= req.body.clientAgency,
-        result.email= req.body.email,
+    const id = req.params.id; 
+    try{
+ await dataModel.findById({_id:id},async (err,result)=>{
+    //   console.log(result,"result")
+      result.clientAgency= req.body.clientAgency,
+      result.email= req.body.email,
         result.name= req.body.name,
         result.uniqueIdentifier= req.body.uniqueIdentifier,
         result.govwinId= req.body.govwinId,
@@ -77,12 +77,13 @@ app.put('/update/:id',async (req,res)=>{
         result.leadAndSupport= req.body.leadAndSupport,
         result.personName= req.body.personName,
         result.Inputdate=req.body.Inputdate
-        if(err){
-            res.send(err)
-            return
-        }
-        res.send(result)
+        result.save()
     })
+            
+        }
+        catch(error){
+            console.log(error)
+        }
     
 })
 app.listen(4001,()=>{
